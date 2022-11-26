@@ -1,0 +1,2 @@
+declare;
+("react-slick");
