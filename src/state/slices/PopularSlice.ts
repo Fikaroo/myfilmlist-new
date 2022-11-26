@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { BASE_URL, API_KEY, IMAGE_BASE_URL } from "../constants";
+import { BASE_URL, API_KEY } from "../constants";
 import axios from "axios";
 
 const filmName = "Avengers";
