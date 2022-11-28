@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useAppSelector } from "../../state/hooks";
 import Search from "../Search";
 import SaveModal from "../Modal/SaveModal";
+import { Link } from "react-router-dom";
 const Nav = () => {
   const { count } = useAppSelector((state) => state.savedMovie);
   const [isOpen, setOpen] = useState(false);
@@ -14,15 +15,22 @@ const Nav = () => {
           <div>
             <Search />
           </div>
-          <div className="flex relative px-2">
-            <BookmarkIcon
-              width={32}
-              className="hover:fill-current hover:cursor-pointer"
-              onClick={() => setOpen(true)}
-            />
-            <span className="absolute -right-1.5 -top-3.5 flex justify-center items-center rounded-full bg-red-400 w-7 h-7 text-sm">
-              {count}
-            </span>
+          <div className="flex gap-4">
+            <div className="flex relative px-2">
+              <BookmarkIcon
+                width={32}
+                className="hover:fill-current hover:cursor-pointer"
+                onClick={() => setOpen(true)}
+              />
+              <span className="absolute -right-1.5 -top-3.5 flex justify-center items-center rounded-full bg-red-400 w-7 h-7 text-sm">
+                {count}
+              </span>{" "}
+            </div>{" "}
+            {/* <Link to="/saved-lists">
+              <button className="font-medium px-4 py-1">
+                My Lists
+              </button>
+            </Link> */}
           </div>
         </div>
       </nav>

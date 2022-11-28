@@ -1,4 +1,5 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
+import axios from "axios";
 import { DataProps } from "./PopularSlice";
 
 interface IInitialState {
@@ -9,7 +10,7 @@ interface IInitialState {
 
 interface ISavedList {
   id: string;
-  nameList: string;
+  title: string;
   movies: DataProps[];
   length: number;
 }
@@ -18,6 +19,18 @@ const initialState: IInitialState = {
   list: [],
   count: 0,
   savedList: [],
+};
+
+export const createList = async (title: string, savedMovies: {}[]) => {
+  const { data } = await axios.post(
+    "https://acb-api.algoritmika.org/api/movies/list",
+    {
+      title: title,
+      movies: savedMovies.map((movie) => movie),
+    }
+  );
+
+  return data;
 };
 
 const SavedMovieSlice = createSlice({
@@ -33,13 +46,7 @@ const SavedMovieSlice = createSlice({
       state.count--;
     },
     addList: (state, action) => {
-      const id = nanoid();
-      state.savedList.push({
-        id: id,
-        nameList: action.payload,
-        movies: state.list,
-        length: state.count,
-      });
+      state.savedList.push({ ...action.payload, length: state.list.length });
     },
     deleteList: (state, action) => {
       state.savedList = state.savedList.filter(

@@ -1,14 +1,15 @@
 import { Dialog, Transition } from "@headlessui/react";
 import {
-  ClipboardDocumentIcon,
   ClipboardDocumentListIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Fragment, useState } from "react";
+import { Link } from "react-router-dom";
 import { IMAGE_BASE_URL } from "../../state/constants";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import {
   addList,
+  createList,
   deleteList,
   unSaveMovie,
 } from "../../state/slices/SavedMovieSlice";
@@ -30,10 +31,11 @@ const SaveModal = ({ isOpen, setOpen, count }: ISavedModal) => {
 
   const { list, savedList } = useAppSelector((state) => state.savedMovie);
   const saveList = () => {
-    console.log(count);
     if (val && count !== 0) {
       setVal("");
-      dispatch(addList(val));
+      createList(val, list).then((res) => {
+        dispatch(addList(res));
+      });
     } else if (count !== 0) {
       setERR(true);
     }
@@ -117,13 +119,13 @@ const SaveModal = ({ isOpen, setOpen, count }: ISavedModal) => {
                       <input
                         type="text"
                         className="rounded focus:outline-none text-alternative px-3 py-1"
-                        placeholder="List Name"
+                        placeholder="Title"
                         onChange={(e) => handleListName(e)}
                         value={val}
                       />
                       {err && (
                         <span className="text-red-400 text-sm font-medium">
-                          Please enter a name
+                          Please enter a title
                         </span>
                       )}
                     </div>
@@ -131,31 +133,36 @@ const SaveModal = ({ isOpen, setOpen, count }: ISavedModal) => {
                       onClick={saveList}
                       className="bg-blue-100 px-4 py-1 rounded text-primary font-medium hover:bg-blue-200"
                     >
-                      Add List
+                      Create List
                     </button>
-                    <div className="grid gap-2 w-full rounded p-3">
+                    <div className="grid gap-2 w-full rounded p-3 max-h-[340px] overflow-auto">
                       {savedList &&
                         savedList.map((list) => (
-                          <div
-                            className="bg-primary max-w-[230px] flex rounded p-2 flex-col relative"
+                          <Link
+                            to={`/saved-list/${list.id}`}
+                            target="_blank"
                             key={list.id}
                           >
-                            <div className="flex gap-2">
-                              <ClipboardDocumentListIcon width={24} />
-                              <p className="font-medium text-lg capitalize">
-                                {list.nameList}
-                              </p>
+                            <div className=" max-w-[230px] flex  flex-col relative">
+                              <div className="border border-secondary p-2 rounded-md hover:bg-secondary ">
+                                <div className="flex gap-2">
+                                  <ClipboardDocumentListIcon width={24} />
+                                  <p className="font-medium text-lg capitalize">
+                                    {list.title}
+                                  </p>
+                                </div>
+                                <span className="font-medium text-sm">
+                                  Film Number: {list.length}
+                                </span>
+                              </div>
+                              <div className="absolute -top-2 -right-2 w-5 h-5 ">
+                                <XMarkIcon
+                                  className="cursor-pointer flex justify-center rounded-md border border-transparent bg-blue-100 stroke-alternative hover:bg-blue-200 focus:outline-none"
+                                  onClick={() => dispatch(deleteList(list.id))}
+                                ></XMarkIcon>
+                              </div>
                             </div>
-                            <span className="font-medium text-sm">
-                              Film Number: {list.length}
-                            </span>
-                            <div className="absolute -top-2 -right-2 w-5 h-5 ">
-                              <XMarkIcon
-                                className="cursor-pointer flex justify-center rounded-md border border-transparent bg-blue-100 stroke-alternative hover:bg-blue-200 focus:outline-none"
-                                onClick={() => dispatch(deleteList(list.id))}
-                              ></XMarkIcon>
-                            </div>
-                          </div>
+                          </Link>
                         ))}
                     </div>
                   </div>

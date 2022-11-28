@@ -22,7 +22,7 @@ const MovieItem = ({ filmData }: MovieItemProps) => {
     isSave ? dispatch(unSaveMovie(filmData.id)) : dispatch(saveMovie(filmData));
   };
   return filmData.poster_path ? (
-    <div className="relative p-4 rounded-lg bg-neutral-900">
+    <div key={filmData.id} className="relative p-4 rounded-lg bg-neutral-900">
       <div className="relative">
         <img
           // className="rounded-md mx-auto sm:mx-0 w-[320px] sm:w-[360px] md:w-[320px] lg:w-[400px] xl:w-[480px] object-cover"
